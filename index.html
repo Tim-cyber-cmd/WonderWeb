@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WonderSearch</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; line-height: 1.4; }
+    h1 { margin-bottom: 0.3rem; }
+    form { display: flex; gap: 0.5rem; margin: 1rem 0; }
+    input { flex: 1; padding: 0.6rem; font-size: 1rem; }
+    button { padding: 0.6rem 1rem; font-size: 1rem; cursor: pointer; }
+    ul { padding-left: 1.25rem; }
+    li { margin: 0.45rem 0; }
+  </style>
+</head>
+<body>
+  <h1>WonderSearch</h1>
+  <p>Eine Metasuchmaschine mit Ergebnissen aus bekannten Suchmaschinen.</p>
+  <form id="search-form">
+    <input id="query" type="search" placeholder="Suchbegriff eingeben…" required>
+    <button type="submit">Suchen</button>
+  </form>
+
+  <h2>Ergebnisse</h2>
+  <ul id="results"></ul>
+
+  <script>
+    const searchEngines = [
+      { name: "Google", url: "https://www.google.com/search?q=%s" },
+      { name: "Bing", url: "https://www.bing.com/search?q=%s" },
+      { name: "DuckDuckGo", url: "https://duckduckgo.com/?q=%s" },
+      { name: "Yahoo", url: "https://search.yahoo.com/search?p=%s" },
+      { name: "Ecosia", url: "https://www.ecosia.org/search?q=%s" },
+      { name: "Brave Search", url: "https://search.brave.com/search?q=%s" },
+      { name: "Startpage", url: "https://www.startpage.com/do/search?query=%s" },
+      { name: "Yandex", url: "https://yandex.com/search/?text=%s" },
+      { name: "Baidu", url: "https://www.baidu.com/s?wd=%s" }
+    ];
+
+    const searchForm = document.getElementById("search-form");
+    const queryInput = document.getElementById("query");
+    const results = document.getElementById("results");
+
+    searchForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const query = queryInput.value.trim();
+      if (!query) {
+        return;
+      }
+
+      const encodedQuery = encodeURIComponent(query);
+      results.innerHTML = "";
+
+      searchEngines.forEach((engine) => {
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = engine.url.replace("%s", encodedQuery);
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = `${engine.name} Ergebnisse für "${query}"`;
+        item.appendChild(link);
+        results.appendChild(item);
+      });
+    });
+  </script>
+</body>
+</html>
